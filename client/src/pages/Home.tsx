@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState, useEffect, useRef } from "react";
 import { Music, MapPin, Calendar, Heart, Gift, MessageCircle, Volume2, VolumeX } from "lucide-react";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 /**
  * Cherry Blossom Spring Wedding Invitation
@@ -17,6 +18,15 @@ export default function Home() {
   const [isMuted, setIsMuted] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const mastHeadRef = useRef<HTMLDivElement>(null);
+
+  // Intersection Observer untuk setiap section
+  const { ref: mastHeadObserverRef, isVisible: isMastHeadVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: coupleObserverRef, isVisible: isCoupleVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: eventsObserverRef, isVisible: isEventsVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: rsvpObserverRef, isVisible: isRsvpVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: storiesObserverRef, isVisible: isStoriesVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: giftsObserverRef, isVisible: isGiftsVisible } = useIntersectionObserver({ threshold: 0.2 });
+  const { ref: closingObserverRef, isVisible: isClosingVisible } = useIntersectionObserver({ threshold: 0.2 });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -172,7 +182,14 @@ export default function Home() {
       </section>
 
       {/* Masthead Section */}
-      <section ref={mastHeadRef} className="py-16 md:py-24 bg-white scroll-smooth">
+      <section ref={(el) => {
+        if (el) {
+          mastHeadRef.current = el as HTMLDivElement;
+          (mastHeadObserverRef as any).current = el;
+        }
+      }} className={`py-16 md:py-24 bg-white scroll-smooth transition-all duration-700 ${
+        isMastHeadVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-2xl mx-auto px-4 text-center space-y-8">
           {/* Decorative Divider */}
           <div className="flex items-center justify-center gap-4">
@@ -197,7 +214,9 @@ export default function Home() {
       </section>
 
       {/* Wedding Couple Section */}
-      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
+      <section ref={coupleObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
+        isCoupleVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             The Couple
@@ -248,7 +267,9 @@ export default function Home() {
       </section>
 
       {/* Events Section */}
-      <section className="py-16 md:py-24 bg-white transition-all duration-700 ease-out">
+      <section ref={eventsObserverRef} className={`py-16 md:py-24 bg-white transition-all duration-700 ease-out ${
+        isEventsVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Celebration Details
@@ -321,7 +342,9 @@ export default function Home() {
       </section>
 
       {/* RSVP Section */}
-      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
+      <section ref={rsvpObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
+        isRsvpVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 animate-fade-up">
             RSVP
@@ -377,7 +400,9 @@ export default function Home() {
       </section>
 
       {/* Stories Section */}
-      <section className="py-16 md:py-24 bg-white transition-all duration-700 ease-out">
+      <section ref={storiesObserverRef} className={`py-16 md:py-24 bg-white transition-all duration-700 ease-out ${
+        isStoriesVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Our Story
@@ -414,7 +439,9 @@ export default function Home() {
       </section>
 
       {/* Gifts Section */}
-      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
+      <section ref={giftsObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
+        isGiftsVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Gifts & Wishes
@@ -478,7 +505,9 @@ export default function Home() {
       </section>
 
       {/* Closing Section */}
-      <section className="py-24 bg-white relative overflow-hidden transition-all duration-700 ease-out">
+      <section ref={closingObserverRef} className={`py-24 bg-white relative overflow-hidden transition-all duration-700 ease-out ${
+        isClosingVisible ? 'opacity-100' : 'opacity-0'
+      }`}>
         <div className="absolute inset-0 opacity-5">
           <img
             src="/manus-storage/sakura-pattern_52e90b04.png"

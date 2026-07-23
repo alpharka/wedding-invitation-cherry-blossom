@@ -198,6 +198,20 @@
   .animate-falling-petals {
     animation: fallingPetals 8s linear infinite;
   }
+  /* Scroll-triggered animations */
+  .animate-on-scroll {
+    opacity: 0;
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+  .animate-on-scroll-delay-1 {
+    animation-delay: 0.1s;
+  }
+  .animate-on-scroll-delay-2 {
+    animation-delay: 0.2s;
+  }
+  .animate-on-scroll-delay-3 {
+    animation-delay: 0.3s;
+  }
   @media (prefers-reduced-motion: reduce) {
     * {
       animation-duration: 0.01ms !important;
