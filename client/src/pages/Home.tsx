@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Music, MapPin, Calendar, Heart, Gift, MessageCircle, Volume2, VolumeX } from "lucide-react";
 
 /**
@@ -16,6 +16,7 @@ import { Music, MapPin, Calendar, Heart, Gift, MessageCircle, Volume2, VolumeX }
 export default function Home() {
   const [isMuted, setIsMuted] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
+  const mastHeadRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,6 +25,10 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleOpenInvitation = () => {
+    mastHeadRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   // Sample wedding data - would be replaced with actual data from API
   const weddingData = {
@@ -158,7 +163,8 @@ export default function Home() {
           <p className="text-lg opacity-90">{weddingData.couple.guestName}</p>
           <Button
             size="lg"
-            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-serif transition-all hover:scale-105"
+            onClick={handleOpenInvitation}
+            className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full px-8 py-6 text-lg font-serif transition-all hover:scale-105 active:scale-95"
           >
             Open Invitation
           </Button>
@@ -166,7 +172,7 @@ export default function Home() {
       </section>
 
       {/* Masthead Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section ref={mastHeadRef} className="py-16 md:py-24 bg-white scroll-smooth">
         <div className="max-w-2xl mx-auto px-4 text-center space-y-8">
           {/* Decorative Divider */}
           <div className="flex items-center justify-center gap-4">
@@ -179,11 +185,11 @@ export default function Home() {
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
           </div>
 
-          <div className="space-y-4">
-            <h2 className="text-3xl md:text-4xl font-serif text-primary">
+          <div className="space-y-4 animate-fade-up">
+            <h2 className="text-3xl md:text-4xl font-serif text-primary animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Together
             </h2>
-            <p className="text-lg text-muted-foreground font-light italic">
+            <p className="text-lg text-muted-foreground font-light italic animate-fade-up" style={{ animationDelay: '0.2s' }}>
               "Two souls, one beautiful journey"
             </p>
           </div>
@@ -191,15 +197,15 @@ export default function Home() {
       </section>
 
       {/* Wedding Couple Section */}
-      <section className="py-16 md:py-24 bg-secondary/20">
+      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             The Couple
           </h2>
 
           <div className="grid md:grid-cols-2 gap-12">
             {/* Groom */}
-            <div className="text-center space-y-6 animate-fade-up">
+            <div className="text-center space-y-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               <div className="relative w-48 h-48 mx-auto">
                 <div className="absolute inset-0 rounded-full border-4 border-primary/30" />
                 <img
@@ -219,7 +225,7 @@ export default function Home() {
             </div>
 
             {/* Bride */}
-            <div className="text-center space-y-6 animate-fade-up">
+            <div className="text-center space-y-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
               <div className="relative w-48 h-48 mx-auto">
                 <div className="absolute inset-0 rounded-full border-4 border-primary/30" />
                 <img
@@ -242,9 +248,9 @@ export default function Home() {
       </section>
 
       {/* Events Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white transition-all duration-700 ease-out">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Celebration Details
           </h2>
 
@@ -253,6 +259,7 @@ export default function Home() {
               <Card
                 key={idx}
                 className="p-8 border-2 border-primary/20 hover:shadow-lg transition-all duration-300 animate-fade-up"
+                style={{ animationDelay: `${idx * 0.15}s` }}
               >
                 <div className="space-y-4">
                   <h3 className="text-2xl font-serif font-bold text-primary">
@@ -314,13 +321,13 @@ export default function Home() {
       </section>
 
       {/* RSVP Section */}
-      <section className="py-16 md:py-24 bg-secondary/20">
+      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
         <div className="max-w-2xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 animate-fade-up">
             RSVP
           </h2>
 
-          <Card className="p-8 border-2 border-primary/20">
+          <Card className="p-8 border-2 border-primary/20 animate-fade-up">
             <form className="space-y-6">
               <div>
                 <label className="block text-sm font-medium mb-2">
@@ -370,9 +377,9 @@ export default function Home() {
       </section>
 
       {/* Stories Section */}
-      <section className="py-16 md:py-24 bg-white">
+      <section className="py-16 md:py-24 bg-white transition-all duration-700 ease-out">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Our Story
           </h2>
 
@@ -382,7 +389,8 @@ export default function Home() {
                 key={idx}
                 className={`flex flex-col ${
                   idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"
-                } gap-8 items-center animate-fade-up`}
+                } gap-8 items-center animate-fade-up transition-all duration-700`}
+                style={{ animationDelay: `${idx * 0.2}s` }}
               >
                 <div className="flex-1">
                   <img
@@ -406,15 +414,15 @@ export default function Home() {
       </section>
 
       {/* Gifts Section */}
-      <section className="py-16 md:py-24 bg-secondary/20">
+      <section className="py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out">
         <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Gifts & Wishes
           </h2>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Monetary Gift */}
-            <Card className="p-8 border-2 border-primary/20 space-y-6">
+            <Card className="p-8 border-2 border-primary/20 space-y-6 animate-fade-up" style={{ animationDelay: '0.1s' }}>
               <div className="flex items-center gap-3">
                 <Gift className="w-6 h-6 text-primary" />
                 <h3 className="text-xl font-serif font-bold">Monetary Gift</h3>
@@ -449,7 +457,7 @@ export default function Home() {
             </Card>
 
             {/* Wishes */}
-            <Card className="p-8 border-2 border-primary/20 space-y-6">
+            <Card className="p-8 border-2 border-primary/20 space-y-6 animate-fade-up" style={{ animationDelay: '0.2s' }}>
               <div className="flex items-center gap-3">
                 <MessageCircle className="w-6 h-6 text-primary" />
                 <h3 className="text-xl font-serif font-bold">Share a Wish</h3>
@@ -470,7 +478,7 @@ export default function Home() {
       </section>
 
       {/* Closing Section */}
-      <section className="py-24 bg-white relative overflow-hidden">
+      <section className="py-24 bg-white relative overflow-hidden transition-all duration-700 ease-out">
         <div className="absolute inset-0 opacity-5">
           <img
             src="/manus-storage/sakura-pattern_52e90b04.png"
@@ -479,16 +487,16 @@ export default function Home() {
           />
         </div>
 
-        <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-8 animate-fade-up">
-          <h2 className="text-4xl md:text-5xl font-serif">Thank You</h2>
+        <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <h2 className="text-4xl md:text-5xl font-serif animate-fade-up" style={{ animationDelay: '0s' }}>Thank You</h2>
 
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg text-muted-foreground leading-relaxed animate-fade-up" style={{ animationDelay: '0.1s' }}>
             Thank you for being a part of our special day. Your presence and
             blessings mean the world to us as we begin this beautiful journey
             together.
           </p>
 
-          <div className="space-y-2">
+          <div className="space-y-2 animate-fade-up" style={{ animationDelay: '0.2s' }}>
             <p className="text-2xl font-serif font-bold text-primary">
               With Love,
             </p>
