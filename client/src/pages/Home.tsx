@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { useState, useEffect, useRef } from "react";
 import { Music, MapPin, Calendar, Heart, Gift, MessageCircle, Volume2, VolumeX } from "lucide-react";
-import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 /**
  * Cherry Blossom Spring Wedding Invitation
@@ -14,19 +13,59 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
  * - Generous whitespace and botanical accents throughout
  */
 
+// Reusable component untuk section dengan scroll animation
+function AnimatedSection({ 
+  children, 
+  className = "" 
+}: { 
+  children: React.ReactNode; 
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          // Unobserve setelah trigger untuk performance
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        threshold: 0.15,
+        rootMargin: "0px 0px -50px 0px",
+      }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`transition-all duration-700 ease-out ${
+        isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      } ${className}`}
+    >
+      {children}
+    </div>
+  );
+}
+
 export default function Home() {
   const [isMuted, setIsMuted] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const mastHeadRef = useRef<HTMLDivElement>(null);
-
-  // Intersection Observer untuk setiap section
-  const { ref: mastHeadObserverRef, isVisible: isMastHeadVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: coupleObserverRef, isVisible: isCoupleVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: eventsObserverRef, isVisible: isEventsVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: rsvpObserverRef, isVisible: isRsvpVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: storiesObserverRef, isVisible: isStoriesVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: giftsObserverRef, isVisible: isGiftsVisible } = useIntersectionObserver({ threshold: 0.2 });
-  const { ref: closingObserverRef, isVisible: isClosingVisible } = useIntersectionObserver({ threshold: 0.2 });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -182,15 +221,11 @@ export default function Home() {
       </section>
 
       {/* Masthead Section */}
-      <section ref={(el) => {
-        if (el) {
-          mastHeadRef.current = el as HTMLDivElement;
-          (mastHeadObserverRef as any).current = el;
-        }
-      }} className={`py-16 md:py-24 bg-white scroll-smooth transition-all duration-700 ${
-        isMastHeadVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
-        <div className="max-w-2xl mx-auto px-4 text-center space-y-8">
+      <AnimatedSection className="py-16 md:py-24 bg-white">
+        <div
+          ref={mastHeadRef}
+          className="max-w-2xl mx-auto px-4 text-center space-y-8"
+        >
           {/* Decorative Divider */}
           <div className="flex items-center justify-center gap-4">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
@@ -202,7 +237,7 @@ export default function Home() {
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
           </div>
 
-          <div className="space-y-4 animate-fade-up">
+          <div className="space-y-4">
             <h2 className="text-3xl md:text-4xl font-serif text-primary animate-fade-up" style={{ animationDelay: '0.1s' }}>
               Together
             </h2>
@@ -211,12 +246,10 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Wedding Couple Section */}
-      <section ref={coupleObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
-        isCoupleVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-16 md:py-24 bg-secondary/20">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             The Couple
@@ -264,12 +297,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Events Section */}
-      <section ref={eventsObserverRef} className={`py-16 md:py-24 bg-white transition-all duration-700 ease-out ${
-        isEventsVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-16 md:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Celebration Details
@@ -339,12 +370,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* RSVP Section */}
-      <section ref={rsvpObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
-        isRsvpVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-16 md:py-24 bg-secondary/20">
         <div className="max-w-2xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-12 animate-fade-up">
             RSVP
@@ -397,12 +426,10 @@ export default function Home() {
             </form>
           </Card>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Stories Section */}
-      <section ref={storiesObserverRef} className={`py-16 md:py-24 bg-white transition-all duration-700 ease-out ${
-        isStoriesVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-16 md:py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Our Story
@@ -436,12 +463,10 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Gifts Section */}
-      <section ref={giftsObserverRef} className={`py-16 md:py-24 bg-secondary/20 transition-all duration-700 ease-out ${
-        isGiftsVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-16 md:py-24 bg-secondary/20">
         <div className="max-w-4xl mx-auto px-4">
           <h2 className="text-3xl md:text-4xl font-serif text-center mb-16 animate-fade-up">
             Gifts & Wishes
@@ -502,12 +527,10 @@ export default function Home() {
             </Card>
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Closing Section */}
-      <section ref={closingObserverRef} className={`py-24 bg-white relative overflow-hidden transition-all duration-700 ease-out ${
-        isClosingVisible ? 'opacity-100' : 'opacity-0'
-      }`}>
+      <AnimatedSection className="py-24 bg-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-5">
           <img
             src="/manus-storage/sakura-pattern_52e90b04.png"
@@ -517,15 +540,15 @@ export default function Home() {
         </div>
 
         <div className="relative z-10 max-w-2xl mx-auto px-4 text-center space-y-8 animate-fade-up" style={{ animationDelay: '0.1s' }}>
-          <h2 className="text-4xl md:text-5xl font-serif animate-fade-up" style={{ animationDelay: '0s' }}>Thank You</h2>
+          <h2 className="text-4xl md:text-5xl font-serif">Thank You</h2>
 
-          <p className="text-lg text-muted-foreground leading-relaxed animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <p className="text-lg text-muted-foreground leading-relaxed">
             Thank you for being a part of our special day. Your presence and
             blessings mean the world to us as we begin this beautiful journey
             together.
           </p>
 
-          <div className="space-y-2 animate-fade-up" style={{ animationDelay: '0.2s' }}>
+          <div className="space-y-2">
             <p className="text-2xl font-serif font-bold text-primary">
               With Love,
             </p>
@@ -542,7 +565,7 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </AnimatedSection>
 
       {/* Footer */}
       <footer className="bg-primary/5 py-8 text-center text-sm text-muted-foreground">
